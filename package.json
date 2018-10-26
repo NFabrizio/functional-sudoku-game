@@ -2,7 +2,7 @@
   "name": "functional-sudoku-game",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "build": "webpack",
     "start": "node ./functional-sudoku-game.dist.js",
