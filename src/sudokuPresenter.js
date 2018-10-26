@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { setCell, validateTable } from './src/utils';
+import { setCell, validateTable } from './utils';
 
 const templateString = document.getElementsByClassName('js-table-template')[0].innerHTML;
 const tableTemplate = _.template(templateString);

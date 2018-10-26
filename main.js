@@ -1,5 +1,5 @@
 import { createTable } from './src/utils';
-import { renderTable, renderTimer } from './sudokuPresenter';
+import { renderTable, renderTimer } from './src/sudokuPresenter';
 
 // Check Prolog CLP(FD)
 

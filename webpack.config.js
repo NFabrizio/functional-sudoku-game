@@ -2,7 +2,7 @@ module.exports = {
   entry: [ 'babel-polyfill', './main.js' ],
   output: {
     path: __dirname,
-    filename: 'functional-sudoku-game.dist.js'
+    filename: './dist/functional-sudoku-game.dist.js'
   },
   module: {
     rules: [{
