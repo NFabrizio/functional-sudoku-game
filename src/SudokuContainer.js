@@ -1,24 +1,48 @@
 import _ from 'lodash';
 import React from 'react';
-import { createTable } from './utils';
+import { createTable, validateTable } from './utils';
 
 class SudokuContainer extends React.Component {
-  templateString() {
-    return _.each(table, (row, rowIndex) => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeKey: null
+    }
+
+    this.clickHandler = this.clickHandler.bind(this);
+  }
+
+  clickHandler(itemKey, event) {
+    console.log('clicked');
+    console.log(itemKey);
+    this.setState({
+      activeKey: itemKey
+    });
+  }
+
+  tableTemplate(table, isValid = false) {
+    return table.map((row, rowIndex) => {
       return (
-        <tr class="sudoku-row">
+        <tr className="sudoku-row" key={`row-${rowIndex}`}>
         {
-          _.each(row, (cell, cellIndex) => {
+          row.map((cell, cellIndex) => {
             const rightBorderClass = (cellIndex === 2 || cellIndex === 5) ? 'sudoku-border-right' : '';
             const bottomBorderClass = (rowIndex === 2 || rowIndex === 5) ? 'sudoku-border-bottom' : '';
             const validClass = isValid ? '' : 'invalid';
-            const classList = [rightBorderClass, bottomBorderClass, validClass].join(' ');
+            const cellKey = `row-${rowIndex}-cell-${cellIndex}`;
+            const isSelected = this.state.activeKey === cellKey ? 'selected' : '';
+            const classList = [rightBorderClass, bottomBorderClass, validClass, isSelected].join(' ');
+            const boundClickHandler = this.clickHandler.bind(this, cellKey);
 
             return (
-              <td class="sudoku-cell js-sudoku-cell <%= classList %>"
-                data-row="<%= rowIndex %>"
-                data-column="<%= cellIndex %>">
-                typeof cell === 'number' ? cell : '-'
+              <td
+                className={`sudoku-cell ${classList}`}
+                data-row={rowIndex}
+                data-column={cellIndex}
+                key={cellKey}
+                onClick={boundClickHandler}
+              >
+                {typeof cell === 'number' ? cell : '-'}
               </td>
             );
           })
@@ -28,20 +52,21 @@ class SudokuContainer extends React.Component {
     });
   }
 
-  tableTemplate() {
-    _.template(this.templateString);
-  }
-
   renderTable() {
     const table = createTable();
-    return this.tableTemplate({table});
+    const isValid = validateTable(table);
+    return this.tableTemplate(table, isValid);
   }
 
   render() {
     return (
       <div>
         <h1>Sudoku - React</h1>
-        {this.renderTable()}
+        <table>
+          <tbody>
+            {this.renderTable()}
+          </tbody>
+        </ table>
       </div>
     );
   }

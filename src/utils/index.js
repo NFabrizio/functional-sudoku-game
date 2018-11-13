@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const createRow = () => _.times(9, _.constant(null));
+const createRow = () => _.times(9, _.constant('-'));
 export const createTable = () => _.times(9, createRow);
 
 const createRow2 = x => _.map(_.range(9), y => `${x}-${y}`);
