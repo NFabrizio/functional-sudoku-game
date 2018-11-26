@@ -1,20 +1,35 @@
 import _ from 'lodash';
 import React from 'react';
-import { createTable, validateTable } from './utils';
+import { createTable, setCell, validateTable } from './utils';
 
 class SudokuContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeKey: null
+      activeKey: null,
+      tableData: createTable()
     }
 
+    this.changeHandler = this.changeHandler.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
   }
 
+  changeHandler(rowIndex, cellIndex, event) {
+// console.log('pressed');
+// console.log(rowIndex);
+// console.log(cellIndex);
+// console.log(event.key);
+// console.log(typeof event.key);
+    const value = parseInt(event.key) || null;
+    const newTable = setCell(this.state.tableData, rowIndex, cellIndex, value);
+    this.setState({
+      tableData: newTable
+    });
+  }
+
   clickHandler(itemKey, event) {
-    console.log('clicked');
-    console.log(itemKey);
+// console.log('clicked');
+// console.log(itemKey);
     this.setState({
       activeKey: itemKey
     });
@@ -32,6 +47,7 @@ class SudokuContainer extends React.Component {
             const cellKey = `row-${rowIndex}-cell-${cellIndex}`;
             const isSelected = this.state.activeKey === cellKey ? 'selected' : '';
             const classList = [rightBorderClass, bottomBorderClass, validClass, isSelected].join(' ');
+            const boundChangeHandler = this.changeHandler.bind(this, rowIndex, cellIndex);
             const boundClickHandler = this.clickHandler.bind(this, cellKey);
 
             return (
@@ -40,7 +56,9 @@ class SudokuContainer extends React.Component {
                 data-row={rowIndex}
                 data-column={cellIndex}
                 key={cellKey}
+                onKeyPress={boundChangeHandler}
                 onClick={boundClickHandler}
+                tabIndex="0"
               >
                 {typeof cell === 'number' ? cell : '-'}
               </td>
@@ -53,7 +71,7 @@ class SudokuContainer extends React.Component {
   }
 
   renderTable() {
-    const table = createTable();
+    const table = this.state.tableData;
     const isValid = validateTable(table);
     return this.tableTemplate(table, isValid);
   }
